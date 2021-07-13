@@ -6,7 +6,6 @@
       class="main__contentForm__form"
       id="form"
       @submit="onSubmitSignup"
-      @click="errorMsgVisibility = !errorMsgVisibility"
     >
       <div class="main__contentForm__form__fieldset">
         <input
