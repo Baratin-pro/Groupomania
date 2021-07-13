@@ -111,7 +111,7 @@ export default {
 }
 
 .main__contentForm__form {
-  margin: 10% 10%;
+  margin: 3% auto;
   max-width: 450px;
   max-height: 450px;
   border: 1px solid #ccd0d5;
@@ -180,6 +180,7 @@ export default {
   padding: 5px;
   text-align: start;
 }
+
 .errorMsg__title {
   color: #aa2121;
   font-weight: bold;
