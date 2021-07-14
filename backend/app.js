@@ -25,8 +25,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const db = require("./models");
-db.sequelize.sync();
+db.sequelize.sync({ force: true });
 
 app.use("/images", express.static(path.join(__dirname, "images")));
+
+require("./routes/user.js")(app);
 
 module.exports = app;
