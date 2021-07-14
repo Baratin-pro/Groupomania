@@ -84,6 +84,7 @@
       <div class="main__contentForm__form__fieldset">
         <input
           class="
+            btn
             main__contentForm__form__fieldset__input
             main__contentForm__form__fieldset__input--submit
             main__contentForm__form__fieldset__input--submit--login
@@ -98,6 +99,7 @@
         <input
           @click="toggleLogin(this.login)"
           class="
+            btn
             main__contentForm__form__fieldset__input
             main__contentForm__form__fieldset__input--submit
             main__contentForm__form__fieldset__input--submit--signup

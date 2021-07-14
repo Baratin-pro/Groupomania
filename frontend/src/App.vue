@@ -99,4 +99,14 @@ th:not([align]) {
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
+.btn {
+  transition: all 0.5s ease-out;
+}
+
+.btn:hover,
+.btn:focus {
+  box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7);
+  transform: scale(0.98);
+}
 </style>
