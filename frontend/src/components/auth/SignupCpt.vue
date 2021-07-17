@@ -1,16 +1,10 @@
 <template>
   <div>
-    <form
-      action=""
-      method="POST"
-      class="main__contentForm__form"
-      id="form"
-      @submit="onSubmitSignup"
-    >
+    <form class="main__contentForm__form" id="form" @submit="onSubmitSignup">
       <div class="main__contentForm__form__fieldset">
         <input
           @input="checkFirstname"
-          v-model="firstname"
+          v-model="user.firstname"
           class="main__contentForm__form__fieldset__input"
           type="text"
           name="firstname"
@@ -25,7 +19,7 @@
       <div class="main__contentForm__form__fieldset">
         <input
           @input="checkLastname"
-          v-model="lastname"
+          v-model="user.lastname"
           class="main__contentForm__form__fieldset__input"
           type="text"
           name="lastname"
@@ -39,7 +33,7 @@
       </div>
       <div class="main__contentForm__form__fieldset">
         <input
-          v-model="email"
+          v-model="user.email"
           class="main__contentForm__form__fieldset__input"
           type="email"
           name="email"
@@ -54,7 +48,7 @@
       <div class="main__contentForm__form__fieldset">
         <input
           @input="checkPassword"
-          v-model="password"
+          v-model="user.password"
           class="main__contentForm__form__fieldset__input"
           type="password"
           name="password"
@@ -69,7 +63,7 @@
       <div class="main__contentForm__form__fieldset">
         <input
           @input="checkConfirmPassword"
-          v-model="confirmPassword"
+          v-model="user.confirmationPassword"
           class="main__contentForm__form__fieldset__input"
           type="password"
           name="confirmPassword"
@@ -109,6 +103,22 @@
           value="Déjà un compte ?"
         />
       </div>
+      <transition name="responseServerTransition"
+        ><span
+          class="
+            btn
+            main__contentForm__form__fieldset__input
+            main__contentForm__form__fieldset__input--submit
+            main__contentForm__form__fieldset__input--responseServer
+          "
+          v-bind:class="{
+            responseServerIsValid: responseServerIsValid,
+            responseServerIsErr: responseServerIsErr,
+          }"
+          v-if="this.responseServer"
+          >{{ this.responseServer }}
+        </span></transition
+      >
     </form>
     <transition name="appear">
       <div v-if="this.errors.length" class="main__contentForm__form errorMsg">
@@ -133,6 +143,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "SignuCpt",
   el: "#form",
@@ -141,19 +152,28 @@ export default {
       login: true,
       errorMsg: true,
       errors: [],
-      firstname: null,
-      lastname: null,
-      email: null,
-      password: null,
-      confirmPassword: null,
+      user: {
+        firstname: null,
+        lastname: null,
+        email: null,
+        password: null,
+        confirmationPassword: null,
+      },
+
       firstnameIsValid: false,
       lastnameIsValid: false,
       passwordIsValid: false,
       confirmPasswordIsValid: false,
+
       characterRegex: null,
       numericCharacter: null,
       uppercaseCharacter: null,
       numberRegex: null,
+
+      responseServer: null,
+      responseServerIsValid: false,
+      responseServerIsErr: true,
+      checkEmail: null,
     };
   },
   methods: {
@@ -166,15 +186,15 @@ export default {
       let tabOcc = [];
       let regex = /[A-Za-z-]/gi;
       if (
-        this.firstname.slice(0, 1) === "-" ||
-        this.firstname.slice(-1) === "-"
+        this.user.firstname.slice(0, 1) === "-" ||
+        this.user.firstname.slice(-1) === "-"
       ) {
         this.errors.push({
           message: "Le tiret ne peut être la première lettre ni la dernière !",
         });
       }
-      for (let i = 0; i < this.firstname.length; i++) {
-        let letter = this.firstname[i];
+      for (let i = 0; i < this.user.firstname.length; i++) {
+        let letter = this.user.firstname[i];
         if (letter === "-") {
           tabOcc.push(letter);
         }
@@ -184,7 +204,7 @@ export default {
           message: "Le nombre de tiret ne peut dépasser 1 !",
         });
       }
-      let leaveString = this.firstname.replaceAll(regex, "");
+      let leaveString = this.user.firstname.replaceAll(regex, "");
       let leaveSpace = leaveString.replaceAll(" ", "");
       this.characterRegex = [...new Set(leaveSpace.split(""))];
       if (this.characterRegex.length) {
@@ -193,7 +213,7 @@ export default {
         });
       }
 
-      if (this.errors.length === 0 && this.firstname) {
+      if (this.errors.length === 0 && this.user.firstname) {
         return (this.firstnameIsValid = true);
       } else {
         return (this.firstnameIsValid = false);
@@ -204,15 +224,15 @@ export default {
       let tabOcc = [];
       let regex = /[A-Za-z-]/gi;
       if (
-        this.lastname.slice(0, 1) === "-" ||
-        this.lastname.slice(-1) === "-"
+        this.user.lastname.slice(0, 1) === "-" ||
+        this.user.lastname.slice(-1) === "-"
       ) {
         this.errors.push({
           message: "Le tiret ne peut être la première lettre ni la dernière !",
         });
       }
-      for (let i = 0; i < this.lastname.length; i++) {
-        let letter = this.lastname[i];
+      for (let i = 0; i < this.user.lastname.length; i++) {
+        let letter = this.user.lastname[i];
         if (letter === "-") {
           tabOcc.push(letter);
         }
@@ -222,7 +242,7 @@ export default {
           message: "Le nombre de tiret ne peut dépasser 1 !",
         });
       }
-      let leaveString = this.lastname.replaceAll(regex, "");
+      let leaveString = this.user.lastname.replaceAll(regex, "");
       let leaveSpace = leaveString.replaceAll(" ", "");
       this.characterRegex = [...new Set(leaveSpace.split(""))];
       if (this.characterRegex.length) {
@@ -231,7 +251,7 @@ export default {
         });
       }
 
-      if (this.errors.length === 0 && this.lastname) {
+      if (this.errors.length === 0 && this.user.lastname) {
         return (this.lastnameIsValid = true);
       } else {
         return (this.lastnameIsValid = false);
@@ -239,11 +259,11 @@ export default {
     },
     checkPassword: function () {
       this.errors = [];
-      this.characterRegex = /[a-zA-Z]/.test(this.password);
-      this.numericCharacter = /[0-9]/.test(this.password);
-      this.uppercaseCharacter = /[A-Z]/.test(this.password);
-      if (this.password) {
-        if (this.password.length < 8 || this.password.length > 32) {
+      this.characterRegex = /[a-zA-Z]/.test(this.user.password);
+      this.numericCharacter = /[0-9]/.test(this.user.password);
+      this.uppercaseCharacter = /[A-Z]/.test(this.user.password);
+      if (this.user.password) {
+        if (this.user.password.length < 8 || this.user.password.length > 32) {
           this.errors.push({
             message: "Le mot de passe doit prendre entre 8 à 32 caractères !",
           });
@@ -274,8 +294,8 @@ export default {
     },
     checkConfirmPassword: function () {
       this.errors = [];
-      if (this.confirmPassword) {
-        if (this.confirmPassword != this.password) {
+      if (this.user.confirmationPassword) {
+        if (this.user.confirmationPassword != this.user.password) {
           this.errors.push({
             message: "Confirmation du mot de passe incorrect !",
           });
@@ -303,7 +323,7 @@ export default {
         });
       }
 
-      if (!this.email) {
+      if (!this.user.email) {
         this.errors.push({ message: "Email incorrect !" });
       }
       if (!this.passwordIsValid) {
@@ -322,9 +342,30 @@ export default {
         this.lastnameIsValid &&
         this.passwordIsValid &&
         this.confirmPasswordIsValid &&
-        this.email
+        this.user.email
       ) {
-        return true;
+        axios
+          .post("http://localhost:3000/api/user/signup", this.user)
+
+          .then((response) => {
+            this.responseServerIsErr = false;
+            this.responseServerIsValid = true;
+            this.responseServer = response.data.message;
+          })
+          .catch((err) => {
+            this.checkEmail = this.user.email.slice(-3);
+            this.responseServerIsErr = true;
+            this.responseServerIsValid = false;
+            switch (this.checkEmail) {
+              case ".fr":
+              case "com":
+              case "net":
+                this.responseServer = err.response.data.message;
+                break;
+              default:
+                this.responseServer = "email invalide";
+            }
+          });
       }
       e.preventDefault();
     },
@@ -333,21 +374,28 @@ export default {
 </script>
 
 <style>
+.responseServerTransition-enter-from,
 .appear-enter-from {
   opacity: 0;
 }
+.responseServerTransition-enter-to,
 .appear-enter-to {
   opacity: 1;
 }
+
+.responseServerTransition-enter-active,
 .appear-enter-active {
   transition: all 1.5s ease;
 }
+.responseServerTransition-leave-from,
 .appear-leave-from {
   opacity: 1;
 }
+.responseServerTransition-leave-to,
 .appear-leave-to {
   opacity: 0;
 }
+.responseServerTransition-leave-active,
 .appear-leave-active {
   transition: all 1.5s ease;
 }

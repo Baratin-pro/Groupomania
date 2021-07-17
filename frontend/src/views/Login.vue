@@ -37,7 +37,7 @@ export default {
   components: { HeaderCpt, LoginCpt, SignupCpt },
   data() {
     return {
-      login: false,
+      login: true,
     };
   },
   methods: {
@@ -147,8 +147,21 @@ export default {
   background-color: rgba(55, 55, 156, 1);
 }
 .main__contentForm__form__fieldset__input--submit--signup {
-  background-color: #2f851e;
+  background-color: rgb(94, 119, 130);
   margin-bottom: 12px;
+}
+.main__contentForm__form__fieldset__input--responseServer {
+  display: block;
+  margin: auto;
+  margin-bottom: 12px;
+  line-height: 28px;
+}
+
+.responseServerIsErr {
+  background-color: rgb(218, 0, 0);
+}
+.responseServerIsValid {
+  background-color: #2f851e;
 }
 
 /* ------------ Form_Separator ------------ */

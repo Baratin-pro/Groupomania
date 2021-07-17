@@ -17,8 +17,8 @@ const schemaSignup = Joi.object({
     .email({ minDomainSegments: 2, tlds: { allow: ["com", "net", "fr"] } })
     .max(128)
     .required(),
-  password: Joi.string().required(),
-  confirmationPassword: Joi.ref("password"),
+  password: Joi.string().min(8).required(),
+  confirmationPassword: Joi.equal(Joi.ref("password")),
 });
 
 module.exports = schemaSignup;
