@@ -351,6 +351,7 @@ export default {
             this.responseServerIsErr = false;
             this.responseServerIsValid = true;
             this.responseServer = response.data.message;
+            setTimeout(() => this.$router.push({ name: "Home" }), 1500);
           })
           .catch((err) => {
             this.checkEmail = this.user.email.slice(-3);
@@ -377,6 +378,7 @@ export default {
 .responseServerTransition-enter-from,
 .appear-enter-from {
   opacity: 0;
+  transform: scale(1);
 }
 .responseServerTransition-enter-to,
 .appear-enter-to {
@@ -394,9 +396,17 @@ export default {
 .responseServerTransition-leave-to,
 .appear-leave-to {
   opacity: 0;
+  transform: scale(1);
 }
 .responseServerTransition-leave-active,
 .appear-leave-active {
   transition: all 1.5s ease;
+}
+
+.responseServerTransition-enter-to {
+  transform: scale(1.9);
+}
+.responseServerTransition-leave-to {
+  transform: scale(1.9);
 }
 </style>
